@@ -1,0 +1,37 @@
+From: Jochen Sprickerhof <jochen@sprickerhof.de>
+Date: Wed, 4 Jul 2012 17:38:49 +0200
+Subject: Add SONAME to libraries
+
+---
+ Platform/Linux/Build/Common/CommonCppMakefile |    5 +++--
+ Platform/Linux/CreateRedist/Redist_OpenNi.py  |    1 +
+ 2 files changed, 4 insertions(+), 2 deletions(-)
+
+diff --git a/Platform/Linux/Build/Common/CommonCppMakefile b/Platform/Linux/Build/Common/CommonCppMakefile
+index c2c4afc..936d63e 100644
+--- a/Platform/Linux/Build/Common/CommonCppMakefile
++++ b/Platform/Linux/Build/Common/CommonCppMakefile
+@@ -77,8 +77,9 @@ ifneq "$(LIB_NAME)" ""
+ 	CFLAGS += -fPIC -fvisibility=hidden
+ 	ifneq ("$(OSTYPE)","Darwin")
+ 		LDFLAGS += -Wl,--no-undefined
+-		OUTPUT_NAME = lib$(LIB_NAME).so
+-		OUTPUT_COMMAND = $(CXX) -o $(OUTPUT_FILE) $(OBJ_FILES) $(LDFLAGS) -shared
++		OUTPUT_NAME = lib$(LIB_NAME).so.${MAJOR}.${MINOR}
++		OUTPUT_FILENAME = lib$(LIB_NAME).so
++		OUTPUT_COMMAND = $(CXX) -o $(OUTPUT_FILE) $(OBJ_FILES) $(LDFLAGS) -Wl,-soname,${OUTPUT_NAME} -shared && cd ${OUT_DIR} && ln -fs ${OUTPUT_NAME} ${OUTPUT_FILENAME}.${MAJOR} && ln -fs ${OUTPUT_NAME} ${OUTPUT_FILENAME}
+ 	else
+ 		LDFLAGS += -undefined error
+ 		OUTPUT_NAME = lib$(LIB_NAME).dylib
+diff --git a/Platform/Linux/CreateRedist/Redist_OpenNi.py b/Platform/Linux/CreateRedist/Redist_OpenNi.py
+index 594311b..5928386 100644
+--- a/Platform/Linux/CreateRedist/Redist_OpenNi.py
++++ b/Platform/Linux/CreateRedist/Redist_OpenNi.py
+@@ -232,6 +232,7 @@ maintenance = re.search(r"define XN_MAINTENANCE_VERSION (\d+)", version_file).gr
+ build = re.search(r"define XN_BUILD_VERSION (\d+)", version_file).groups()[0]
+ 
+ version = major + "." + minor + "." + maintenance + "." + build
++MAKE_ARGS += ' MAJOR=' + major + ' MINOR=' + minor
+ print "Version:", version
+ 
+ print "Num of compile jobs:", calc_jobs_number()

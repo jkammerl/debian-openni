@@ -17,7 +17,7 @@ Homepage: http://www.openni.org
 Vcs-Git: git://anonscm.debian.org/pkg-multimedia/openni.git
 Vcs-Browser: http://anonscm.debian.org/git/pkg-multimedia/openni.git
 
-Package: libopenni
+Package: libopenni1.5
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends},
@@ -48,12 +48,12 @@ Description: debug and test utilities OpenNI framework
  This package provides a number of related utilities for debugging, testing,
  and view the results of the sensor modules.
 
-Package: libopenni-dev
+Package: libopenni1.5-dev
 Section: libdevel
 Architecture: any
 Depends: ${shlibs:Depends},
          ${misc:Depends},
-         libopenni (= ${binary:Version})
+         libopenni1.5 (= ${binary:Version})
 Suggests: openni-doc
 Description: headers for OpenNI 'Natural Interaction' frameworks
  OpenNI is a framework for getting data to support 'Natural Interaction',
